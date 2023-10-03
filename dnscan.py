@@ -449,13 +449,13 @@ if __name__ == "__main__":
     for subtarget in targets:
         global target
         target = subtarget
-        out.status("Processing domain {}".format(target))
-        if args.resolver_list:
-            out.status("Using resolvers from: {}".format(args.resolver_list))
-        elif args.resolvers:
-            out.status("Using specified resolvers: {}".format(args.resolvers))
-        else:
-            out.status("Using system resolvers: {}".format(",".join(resolver.nameservers)))
+        # out.status("Processing domain {}".format(target))
+        # if args.resolver_list:
+        #     out.status("Using resolvers from: {}".format(args.resolver_list))
+        # elif args.resolvers:
+        #     out.status("Using specified resolvers: {}".format(args.resolvers))
+        # else:
+        #     out.status("Using system resolvers: {}".format(",".join(resolver.nameservers)))
         if args.tld and not '%%' in target:
             if "." in target:
                 out.warn("Warning: TLD scanning works best with just the domain root")
@@ -467,7 +467,7 @@ if __name__ == "__main__":
             # These checks will all fail if we have a custom injection point, so skip them
             if not '%%' in target:
                 nameservers = get_nameservers(target)
-                out.good("Getting nameservers")
+                # out.good("Getting nameservers")
                 targetns = []       # NS servers for target
                 nsip = None
                 try:    # Subdomains often don't have NS recoards..
@@ -477,16 +477,16 @@ if __name__ == "__main__":
                         for rdata in res:
                             targetns.append(rdata.address)
                             nsip = rdata.address
-                            print(nsip + " - " + col.brown + ns + col.end)
-                            if not args.quick:
-                                if outfile:
-                                    print(nsip + " - " + ns, file=outfile)
+                            # print(nsip + " - " + col.brown + ns + col.end)
+                            # if not args.quick:
+                            #     if outfile:
+                            #         print(nsip + " - " + ns, file=outfile)
                         zone_transfer(target, ns, nsip)
                 except SystemExit:
                     sys.exit(0)
-                except:
-                    out.warn("Getting nameservers failed")
-                out.warn("Zone transfer failed\n")
+                # except:
+                #     out.warn("Getting nameservers failed")
+                # out.warn("Zone transfer failed\n")
                 if args.zonetransfer:
                     sys.exit(0)
 
@@ -496,10 +496,10 @@ if __name__ == "__main__":
                     get_dmarc(target)
 
                     # These checks need a proper nameserver, the systemd stub doesn't work
-                    if nsip:
-                        get_dnssec(target, nsip)
-                    else:
-                        get_dnssec(target, resolver.nameservers[0])
+                    # if nsip:
+                    #     get_dnssec(target, nsip)
+                    # else:
+                    #     get_dnssec(target, resolver.nameservers[0])
                     get_mx(target)
             wildcard = get_wildcard(target)
             for wildcard_ip in wildcard:
@@ -507,7 +507,7 @@ if __name__ == "__main__":
                     addresses.add(ipaddr(unicode(wildcard_ip)))
                 except NameError:
                     addresses.add(ipaddr(str(wildcard_ip)))
-            out.status("Scanning " + target + " for " + recordtype + " records")
+            # out.status("Scanning " + target + " for " + recordtype + " records")
             add_target(target)
 
         for i in range(args.threads):
